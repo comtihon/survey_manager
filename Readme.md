@@ -1,4 +1,4 @@
-# Survey service
+# Survey service [![Build Status](https://travis-ci.org/comtihon/survey_manager.svg?branch=master)](https://travis-ci.org/comtihon/survey_manager)
 Survey service manager backend. Works with surveys, questions and answers. For more info see #Protocol.
 
 ## Run
