@@ -1,10 +1,14 @@
 package com.surveyor.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.surveyor.manager.data.dao.AnswerDAOService;
+import com.surveyor.manager.data.dao.QuestionDAOService;
 import com.surveyor.manager.data.dao.SurveyDAOService;
 import com.surveyor.manager.data.dto.QuestionDTO;
 import com.surveyor.manager.data.dto.ResponseDTO;
 import com.surveyor.manager.data.dto.SurveyDTO;
+import com.surveyor.manager.data.entity.Answer;
+import com.surveyor.manager.data.entity.Question;
 import com.surveyor.manager.data.entity.Survey;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,6 +43,12 @@ public class SurveyCRUDTests {
 
     @Autowired
     private SurveyDAOService surveyDAOService;
+
+    @Autowired
+    private QuestionDAOService questionDAOService;
+
+    @Autowired
+    private AnswerDAOService answerDAOService;
 
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:survey.sql")
@@ -90,7 +100,24 @@ public class SurveyCRUDTests {
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:survey.sql")
     @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:clean.sql")
-    public void deleteSurvey() {
-        //TODO
+    public void deleteTest() throws IOException {
+        this.restTemplate.delete(call(port, "/question/question_id2"));
+        ResponseDTO responseDTO =
+                this.restTemplate.getForObject(call(port, "/survey/survey_id1"), ResponseDTO.class);
+        check(responseDTO);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = mapper.writeValueAsString(responseDTO.getResponse());
+        SurveyDTO got = mapper.readValue(jsonInString, SurveyDTO.class);
+        Assert.assertEquals(2, got.getQuestions().size());
+        Optional<Question> deletedQuestion = questionDAOService.findOne("question_id2");
+        Assert.assertFalse(deletedQuestion.isPresent());
+        for(String id : new String[]{"answer_id4", "answer_id4", "answer_id4"}) {
+            Optional<Answer> deletedAnswer = answerDAOService.findOne(id);
+            Assert.assertFalse(deletedAnswer.isPresent());
+        }
+        this.restTemplate.delete(call(port, "/survey/survey_id1"));
+        responseDTO =
+                this.restTemplate.getForObject(call(port, "/survey/survey_id1"), ResponseDTO.class);
+        Assert.assertFalse(responseDTO.isResult());
     }
 }

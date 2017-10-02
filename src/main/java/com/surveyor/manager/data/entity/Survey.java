@@ -95,8 +95,7 @@ public class Survey implements CommonEntity {
             this.name = other.getName();
         if (countryCode == null || countryCode.isEmpty())
             this.countryCode = other.countryCode;
-        if (questions == null)
-            questions = other.getQuestions();
+        questions = other.getQuestions();
     }
 
     @Override

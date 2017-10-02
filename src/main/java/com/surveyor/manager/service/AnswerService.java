@@ -45,4 +45,17 @@ public class AnswerService extends AbstractService {
             return CompletableFuture.completedFuture(ok());
         }
     }
+
+    @Async
+    @Transactional
+    public CompletableFuture<ResponseDTO<String>> delete(String id) {
+        logger.debug("Remove {}", id);
+        Optional<Answer> answer = ((AnswerDAOService) daoService).findOne(id);
+        if (answer.isPresent()) {
+            Question question = answer.get().getQuestion();
+            question.removeAnswer(answer.get());
+            questionDAOService.save(question);
+        }
+        return CompletableFuture.completedFuture(ok());
+    }
 }

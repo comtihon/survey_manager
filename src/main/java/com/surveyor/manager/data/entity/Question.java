@@ -86,6 +86,12 @@ public class Question implements CommonEntity {
         this.survey = survey;
     }
 
+    public void fillUnmodified(Question other) {
+        if (name == null || name.isEmpty())
+            this.name = other.getName();
+        answers = other.answers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

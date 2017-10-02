@@ -3,6 +3,7 @@ package com.surveyor.manager.data.dao;
 import com.surveyor.manager.data.entity.CommonEntity;
 import com.surveyor.manager.data.entity.Survey;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,6 +39,10 @@ public class SurveyDAOService implements DAOService {
 
     @Override
     public void delete(String surveyId) {
-        surveyDAO.delete(surveyId);
+        try {
+            surveyDAO.delete(surveyId);
+        } catch (EmptyResultDataAccessException ignored) {
+
+        }
     }
 }

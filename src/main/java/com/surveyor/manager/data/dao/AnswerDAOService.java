@@ -3,6 +3,7 @@ package com.surveyor.manager.data.dao;
 import com.surveyor.manager.data.entity.Answer;
 import com.surveyor.manager.data.entity.CommonEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class AnswerDAOService implements DAOService {
 
     @Override
     public Answer save(CommonEntity entity) {
-        return answerDAO.save((Answer)entity);
+        return answerDAO.save((Answer) entity);
     }
 
     @Override
@@ -33,6 +34,10 @@ public class AnswerDAOService implements DAOService {
 
     @Override
     public void delete(String id) {
-        answerDAO.delete(id);
+        try {
+            answerDAO.delete(id);
+        } catch (EmptyResultDataAccessException ignored) {
+
+        }
     }
 }
