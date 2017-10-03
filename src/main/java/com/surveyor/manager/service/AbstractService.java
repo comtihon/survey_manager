@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public abstract class AbstractService {
 
-    static final Logger logger = LoggerFactory.getLogger(SurveyService.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(SurveyService.class);
 
     DAOService daoService;
 
@@ -27,7 +27,7 @@ public abstract class AbstractService {
 
     @Async
     public CompletableFuture<ResponseDTO<String>> create(CommonDTO dto) {
-        logger.debug("Create {}", dto);
+        LOGGER.debug("Create {}", dto);
         dto.setId(null);
         CommonEntity toSave = modelMapper.map(dto, dto.getEntityClass());
         toSave.setConnection(toSave);
@@ -38,7 +38,7 @@ public abstract class AbstractService {
     @Async
     @Transactional
     public CompletableFuture<ResponseDTO> read(CommonDTO dto) {
-        logger.debug("Get {}", dto.getId());
+        LOGGER.debug("Get {}", dto.getId());
         Optional entity = daoService.findOne(dto.getId());
         if (entity.isPresent()) {
             CommonEntity read = (CommonEntity) entity.get();
@@ -51,7 +51,7 @@ public abstract class AbstractService {
 
     @Async
     public CompletableFuture<ResponseDTO<String>> update(CommonDTO dto) {
-        logger.debug("Edit {}", dto);
+        LOGGER.debug("Edit {}", dto);
         CommonEntity mapped = modelMapper.map(dto, dto.getEntityClass());
         if (!daoService.findOne(mapped.getId()).isPresent())
             return CompletableFuture.completedFuture(fail("No such entity")); //TODO move error messages to static
@@ -61,7 +61,7 @@ public abstract class AbstractService {
 
     @Async
     public CompletableFuture<ResponseDTO<String>> delete(String id) {
-        logger.debug("Remove {}", id);
+        LOGGER.debug("Remove {}", id);
         daoService.delete(id);
         return CompletableFuture.completedFuture(ok());
     }

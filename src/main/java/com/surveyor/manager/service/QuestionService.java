@@ -27,7 +27,7 @@ public class QuestionService extends AbstractService {
     @Async
     @Transactional
     public CompletableFuture<ResponseDTO<String>> addToSurvey(String surveyId, String questionId) {
-        logger.debug("Add {} to {}", questionId, surveyId);
+        LOGGER.debug("Add {} to {}", questionId, surveyId);
         Optional<Question> question = ((QuestionDAOService) daoService).findOne(questionId);
         Optional<Survey> survey = surveyDAOService.findOne(surveyId);
         if (!survey.isPresent()) {
@@ -45,7 +45,7 @@ public class QuestionService extends AbstractService {
     @Async
     @Transactional
     public CompletableFuture<ResponseDTO<String>> delete(String id) {
-        logger.debug("Remove {}", id);
+        LOGGER.debug("Remove {}", id);
         Optional<Question> question = ((QuestionDAOService) daoService).findOne(id);
         if(question.isPresent()) {
             Survey survey = question.get().getSurvey();
